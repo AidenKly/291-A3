@@ -1,4 +1,4 @@
-import csv
+import csv, sqlite3
 # Inserts data from a given csv file into a given sql table.
 
 def get_db_info():
