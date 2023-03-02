@@ -12,10 +12,10 @@ def get_db_info():
     
     ','.split
 
-def read_csv(filename, row_count):
+def read_csv(filename:str, row_count:int):
     # Takes in a filename and number of rows to randomly select
     # Returns a list of randomly selected rows from the specified .csv file name
-    
+
     with open(filename, 'r') as csvfile:
         # creating a csv reader object
         csvreader = csv.reader(csvfile)
@@ -35,7 +35,25 @@ def read_csv(filename, row_count):
     
     return row_subset
 
-def main():
-    print(read_csv("Dataset\\olist_customers_dataset.csv", 5))
 
+
+def reduce_to_columns(row_list:list[list], columns_to_save:tuple[int]):
+    #NOT NECESARILY NEEDED
+    # remove all columns other than those specified in columns_to_save from the row list
+    column_reduced_row_list = []
+    for row_index in range(len(row_list)):
+        single_row = []
+        for column_index in columns_to_save:
+            single_row.append(row_list[row_index][column_index])
+            
+        column_reduced_row_list.append(single_row)
+    return column_reduced_row_list
+
+def insert_into_database(database_name:str, table_name:str, column_names:list[str], row_list:list[list], columns_to_insert:tuple[int]):
+    pass
+
+def main():
+    row_list = read_csv("Dataset\\olist_customers_dataset.csv", 5)
+    reduced_entries = reduce_to_columns(row_list, [0,4])
+    print(reduced_entries)
 main()
