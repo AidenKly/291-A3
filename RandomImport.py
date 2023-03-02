@@ -38,7 +38,6 @@ def read_csv(filename:str, row_count:int):
 
 
 def reduce_to_columns(row_list:list[list], columns_to_save:tuple[int]):
-    #NOT NECESARILY NEEDED
     # remove all columns other than those specified in columns_to_save from the row list
     column_reduced_row_list = []
     for row_index in range(len(row_list)):
@@ -49,11 +48,26 @@ def reduce_to_columns(row_list:list[list], columns_to_save:tuple[int]):
         column_reduced_row_list.append(single_row)
     return column_reduced_row_list
 
-def insert_into_database(database_name:str, table_name:str, column_names:list[str], row_list:list[list], columns_to_insert:tuple[int]):
+def format_rows(row_list):
     pass
 
+
+
+def insert_into_database(database_name:str, table_name:str, row_list:list[list],):
+    conn = sqlite3.connect(database_name) 
+    c = conn.cursor()
+    formatted_rows = format_rows(row_list)
+    c.execute(f"INSERT INTO {table_name} VALUES \
+                {formatted_rows}")
+    
+
+    
 def main():
-    row_list = read_csv("Dataset\\olist_customers_dataset.csv", 5)
+    print("Starting Data extraction")
+    row_list = read_csv("Dataset\\olist_customers_dataset.csv", 10000)
+    print("Data extraction complete")
+    print("Starting Column removal")
     reduced_entries = reduce_to_columns(row_list, [0,4])
-    print(reduced_entries)
+    print("Column removal complete")
+
 main()
