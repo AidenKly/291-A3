@@ -121,16 +121,16 @@ def main():
     LARGE_DATABASE_ORDERS = 33000
     LARGE_DATABASE_ORDER_ITEMS = 10000
 
-    table_names = {"Customers", "Sellers", "Orders", "Order_items"}
+    table_names = ["Customers", "Sellers", "Orders", "Order_items"]
 
-    customer_table_sizes = {SMALL_DATABASE_CUSTOMERS, MEDIUM_DATABASE_CUSTOMERS, LARGE_DATABASE_CUSTOMERS}
-    seller_table_sizes = {SMALL_DATABASE_SELLERS, MEDIUM_DATABASE_SELLERS, LARGE_DATABASE_SELLERS}
-    order_table_sizes = {SMALL_DATABASE_ORDERS, MEDIUM_DATABASE_ORDERS, LARGE_DATABASE_ORDERS}
-    order_items_table_sizes = {SMALL_DATABASE_ORDER_ITEMS, MEDIUM_DATABASE_ORDER_ITEMS, LARGE_DATABASE_ORDER_ITEMS}
+    customer_table_sizes = [SMALL_DATABASE_CUSTOMERS, MEDIUM_DATABASE_CUSTOMERS, LARGE_DATABASE_CUSTOMERS]
+    seller_table_sizes = [SMALL_DATABASE_SELLERS, MEDIUM_DATABASE_SELLERS, LARGE_DATABASE_SELLERS]
+    order_table_sizes = [SMALL_DATABASE_ORDERS, MEDIUM_DATABASE_ORDERS, LARGE_DATABASE_ORDERS]
+    order_items_table_sizes = [SMALL_DATABASE_ORDER_ITEMS, MEDIUM_DATABASE_ORDER_ITEMS, LARGE_DATABASE_ORDER_ITEMS]
 
-    table_sizes = {customer_table_sizes, seller_table_sizes, order_table_sizes, order_items_table_sizes}
+    table_sizes = [customer_table_sizes, seller_table_sizes, order_table_sizes, order_items_table_sizes]
     
-    database_titles = {'Small', 'Medium', 'Large'}
+    database_titles = ['Small', 'Medium', 'Large']
     database_paths = []
 
     for title_index in range(len(database_titles)):
@@ -138,8 +138,8 @@ def main():
         setup_database(database_paths[title_index])
     
     for db_index in range(len(database_paths)):
-        for table_name in table_names:
-            insertion_setup(table_sizes[db_index], table_name, database_paths[db_index])
+        for table_index in range(len(table_names)):
+            insertion_setup(table_sizes[table_index][db_index], table_names[table_index], database_paths[db_index])
       
     
 main()
