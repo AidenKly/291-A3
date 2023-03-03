@@ -27,7 +27,7 @@ def read_csv(filename:str, row_count:int): # DONE
 
 
 
-def reduce_to_columns(row_list:list[list], columns_to_save:tuple[int]): # DONE
+def reduce_to_columns(row_list:list, columns_to_save:tuple): # DONE
     # remove all columns other than those specified in columns_to_save from the row list
     column_reduced_row_list = []
     for row_index in range(len(row_list)):
