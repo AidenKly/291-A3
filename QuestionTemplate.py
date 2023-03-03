@@ -52,6 +52,9 @@ def main():
         start_time = time.perf_counter() 
         for i in range(50):
             c.execute(QUERY)
+            #---------------
+            # ADD MORE HERE IF NEEDED
+            #---------------
         stop_time = time.perf_counter()
 
         no_index_time_avg = (stop_time - start_time) / 50
@@ -67,6 +70,9 @@ def main():
         start_time = time.perf_counter() 
         for i in range(50):
             c.execute(QUERY)
+            #---------------
+            # ADD MORE HERE IF NEEDED
+            #---------------
         stop_time = time.perf_counter()
 
         self_index_time_avg = (stop_time - start_time) / 50
@@ -84,6 +90,9 @@ def main():
         start_time = time.perf_counter() 
         for i in range(50):
             c.execute(QUERY)
+            #---------------
+            # ADD MORE HERE IF NEEDED
+            #---------------
         stop_time = time.perf_counter()
 
         our_index_time_avg = (stop_time - start_time) / 50
