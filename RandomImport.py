@@ -81,7 +81,7 @@ def setup_database(database_name):
     conn.commit()
     conn.close()
 
-def insertion_setup(data_size, table_name, database_names):
+def insertion_setup(data_size:int, table_name, database_name):
     csv_file_path = input("Enter the FULL csv path for the " + table_name + " table data >> ") 
     
     preserved_columns = input("Enter the csv column indexes you want to insert into the " + table_name + "table, seperated by COMMAS >> ")
@@ -90,20 +90,20 @@ def insertion_setup(data_size, table_name, database_names):
     for index in range(len(preserved_columns)):
         preserved_columns[index] = int(preserved_columns[index])
     
-    for i in range(len(data_size)):
-        print("Starting Data extraction ...")
-        row_list = read_csv(csv_file_path, data_size[i])
-        print("Data extraction complete\n")
-        print("Starting Column removal ...")
-        reduced_entries = reduce_to_columns(row_list, preserved_columns)
-        print("Column removal complete\n")
-        print("Starting row formatting ...")
-        formatted_row_str = format_rows(reduced_entries)
-        print("Row formatting complete\n")
-        print(formatted_row_str)
-        print("Starting data insert ...")
-        insert_into_database(database_names[i], table_name, formatted_row_str)
-        print("Data insert complete")
+    
+    print("Starting Data extraction ...")
+    row_list = read_csv(csv_file_path, data_size)
+    print("Data extraction complete\n")
+    print("Starting Column removal ...")
+    reduced_entries = reduce_to_columns(row_list, preserved_columns)
+    print("Column removal complete\n")
+    print("Starting row formatting ...")
+    formatted_row_str = format_rows(reduced_entries)
+    print("Row formatting complete\n")
+    print(formatted_row_str)
+    print("Starting data insert ...")
+    insert_into_database(database_name, table_name, formatted_row_str)
+    print("Data insert complete")
 
 def main():
     SMALL_DATABASE_CUSTOMERS = 10000
@@ -131,14 +131,15 @@ def main():
     table_sizes = {customer_table_sizes, seller_table_sizes, order_table_sizes, order_items_table_sizes}
     
     database_titles = {'Small', 'Medium', 'Large'}
-    database_names = []
+    database_paths = []
 
-    for i in range(len(database_titles)):
-        database_names.append(input("Enter the FULL Database filepath for the " + database_titles[i] + ">> "))
-        setup_database(database_names[i])
+    for title_index in range(len(database_titles)):
+        database_paths.append(input("Enter the FULL Database filepath for the " + database_titles[title_index] + ">> "))
+        setup_database(database_paths[title_index])
     
-    for i in range(len(table_names)):
-        insertion_setup(table_sizes[i], table_names[i], database_names)
+    for db_index in range(len(database_paths)):
+        for table_name in table_names:
+            insertion_setup(table_sizes[db_index], table_name, database_paths[db_index])
       
     
 main()
