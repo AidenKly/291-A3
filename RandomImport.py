@@ -81,14 +81,7 @@ def setup_database(database_name):
     conn.commit()
     conn.close()
 
-def insertion_setup(data_size:int, table_name, database_name):
-    csv_file_path = input("Enter the FULL csv path for the " + table_name + " table data >> ") 
-    
-    preserved_columns = input("Enter the csv column indexes you want to insert into the " + table_name + "table, seperated by COMMAS >> ")
-    print()
-    preserved_columns = preserved_columns.split(',')
-    for index in range(len(preserved_columns)):
-        preserved_columns[index] = int(preserved_columns[index])
+def insertion_setup(data_size:int, table_name, database_name, csv_file_path, preserved_columns):
     
     
     print("Starting Data extraction ...")
@@ -133,13 +126,28 @@ def main():
     database_titles = ['Small', 'Medium', 'Large']
     database_paths = []
 
-    for title_index in range(len(database_titles)):
-        database_paths.append(input("Enter the FULL Database filepath for the " + database_titles[title_index] + ">> "))
-        setup_database(database_paths[title_index])
+    for title in database_titles:
+        db_path = input("Enter the FULL Database filepath for the " + title + " Database >> ")
+        database_paths.append(db_path)
+        setup_database(db_path)
+
+    csv_file_path_list = []
+    preserved_columns_list = []
+    for name in table_names:
+        # Get CSV file for each table
+        csv_file_path = input("Enter the FULL csv path for the " + name + " table data >> ") 
+        csv_file_path_list.append(csv_file_path)
+        # Get columns to preserve from each table
+        preserved_columns = input("Enter the csv column indexes you want to insert into the " + name + " table, seperated by COMMAS >> ")
+        preserved_columns = preserved_columns.split(',')
+        for index in range(len(preserved_columns)):
+            preserved_columns[index] = int(preserved_columns[index])
+        preserved_columns_list.append(preserved_columns)
+        
     
     for db_index in range(len(database_paths)):
         for table_index in range(len(table_names)):
-            insertion_setup(table_sizes[table_index][db_index], table_names[table_index], database_paths[db_index])
+            insertion_setup(table_sizes[table_index][db_index], table_names[table_index], database_paths[db_index], csv_file_path_list[table_index], preserved_columns_list[table_index])
       
     
 main()
