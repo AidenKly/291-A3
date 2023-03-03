@@ -61,6 +61,9 @@ def main():
             c.execute('CREATE TABLE "Order_items2" ("order_id" TEXT, "order_item_id" INTEGER, "product_id" TEXT, "seller_id" TEXT);')
         except:
             pass
+
+        for i in range(len(table_names)):
+            c.execute('INSERT INTO ' + table_names[i] + '2" SELECT * FROM ' + table_names[i] + ';')
         
         # Start timer
         start_time = time.perf_counter() 
