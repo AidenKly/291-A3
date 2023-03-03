@@ -38,11 +38,17 @@ def reduce_to_columns(row_list:list, columns_to_save:tuple): # DONE
         column_reduced_row_list.append(single_row)
     return column_reduced_row_list
 
-def format_rows(row_list): # NOT DONE, needs to properly format strings
+def format_rows(row_list): # DONE
     # Formats the rows to be inserted into the database from standard python formatting
     # to a long sting following propper sql formatting
     formatted_rows = []
     for row in row_list:
+        for index in range(len(row)):
+            try:
+                int(row[index])
+            except:
+                row[index] = f"'{row[index]}'"
+            
         str_row = ','.join(row)
         str_row.replace('"', "'")
         formatted_rows.append(str_row)
@@ -54,7 +60,7 @@ def format_rows(row_list): # NOT DONE, needs to properly format strings
 
 
 
-def insert_into_database(database_name:str, table_name:str, formatted_row_str:str): # NOT TESTED
+def insert_into_database(database_name:str, table_name:str, formatted_row_str:str): # DONE
     # Inserts a sql-formatted string of rows into a specified table in a database
     conn = sqlite3.connect(database_name) 
     c = conn.cursor()
@@ -67,12 +73,13 @@ def insert_into_database(database_name:str, table_name:str, formatted_row_str:st
 
     
 def main():
-    database_name = input("Enter a Database filename >> ") # DOES NOTHING FOR NOW
-    table_name = input("Enter the name of the table to be inserted into >> ") # DOES NOTHING FOR NOW
+    database_name = input("Enter a FULL Database filepath >> ")
+    table_name = input("Enter the name of the table to be inserted into >> ")
 
-    csv_file_path = input("Enter a csv path >> ") # DOES NOTHING FOR NOW
-    csv_file_path = "Dataset\\olist_customers_dataset.csv"
-    preserved_columns = input("Enter the csv column indexes you want to insert into the database, seperated by COMMAS>> ")
+    csv_file_path = input("Enter a FULL csv path >> ") 
+    
+    # "Dataset\\olist_customers_dataset.csv"
+    preserved_columns = input("Enter the csv column indexes you want to insert into the database, seperated by COMMAS >> ")
     print()
     preserved_columns = preserved_columns.split(',')
     for index in range(len(preserved_columns)):
@@ -89,7 +96,7 @@ def main():
     formatted_row_str = format_rows(reduced_entries)
     print("Row formatting complete\n")
     print(formatted_row_str)
-    #print("Starting data insert ...")
-    #insert_into_database(database_name, table_name, formatted_row_str)
-    #print("Data insert complete")
+    print("Starting data insert ...")
+    insert_into_database(database_name, table_name, formatted_row_str)
+    print("Data insert complete")
 main()
