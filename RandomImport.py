@@ -1,18 +1,8 @@
 import csv, sqlite3, random
 # Inserts data from a given csv file into a given sql table.
 
-def get_db_info():
-    database_name = input("Enter a Database filename. >> ")
-    table_name = input("Enter the name of the table to be inserted into. >> ")
 
-    csv_filename = input("Enter a csv filename. >> ")
-    column_map = {}
-    column_map_str = input("Enter the name of a column in the csv file then '':'' then the name of a column in the database table.\n \
-                           Multiple entries are supported if they are seperated by a comma.")
-    
-    ','.split
-
-def read_csv(filename:str, row_count:int):
+def read_csv(filename:str, row_count:int): # DONE
     # Takes in a filename and number of rows to randomly select
     # Returns a list of randomly selected rows from the specified .csv file name
 
@@ -37,7 +27,7 @@ def read_csv(filename:str, row_count:int):
 
 
 
-def reduce_to_columns(row_list:list[list], columns_to_save:tuple[int]):
+def reduce_to_columns(row_list:list[list], columns_to_save:tuple[int]): # DONE
     # remove all columns other than those specified in columns_to_save from the row list
     column_reduced_row_list = []
     for row_index in range(len(row_list)):
@@ -48,26 +38,54 @@ def reduce_to_columns(row_list:list[list], columns_to_save:tuple[int]):
         column_reduced_row_list.append(single_row)
     return column_reduced_row_list
 
-def format_rows(row_list):
-    pass
+def format_rows(row_list): # DONE
+    # Formats the rows to be inserted into the database from standard python formatting
+    # to a long sting following propper sql formatting
+    formatted_rows = []
+    for row in row_list:
+        str_row = ','.join(row)
+        formatted_rows.append(str_row)
+    
+    formatted_rows_str = '),\n('.join(formatted_rows)
+    formatted_rows_str = '(' + formatted_rows_str + ');'
+    return formatted_rows_str
+        
 
 
 
-def insert_into_database(database_name:str, table_name:str, row_list:list[list],):
+def insert_into_database(database_name:str, table_name:str, formatted_row_str:str): # NOT TESTED
+    # Inserts a sql-formatted string of rows into a specified table in a database
     conn = sqlite3.connect(database_name) 
     c = conn.cursor()
-    formatted_rows = format_rows(row_list)
-    c.execute(f"INSERT INTO {table_name} VALUES \
-                {formatted_rows}")
+    
+    c.execute(f"INSERT INTO {table_name} VALUES\n{formatted_row_str}")
     
 
     
 def main():
-    print("Starting Data extraction")
-    row_list = read_csv("Dataset\\olist_customers_dataset.csv", 10000)
-    print("Data extraction complete")
-    print("Starting Column removal")
-    reduced_entries = reduce_to_columns(row_list, [0,4])
-    print("Column removal complete")
+    database_name = input("Enter a Database filename >> ")
+    table_name = input("Enter the name of the table to be inserted into >> ")
 
+    csv_file_path = input("Enter a csv path >> ")
+    csv_file_path = "Dataset\\olist_customers_dataset.csv"
+    preserved_columns = input("Enter the csv column indexes you want to insert into the database, seperated by COMMAS>> ")
+    print()
+    preserved_columns = preserved_columns.split(',')
+    for index in range(len(preserved_columns)):
+        preserved_columns[index] = int(preserved_columns[index])
+    
+
+    print("Starting Data extraction ...")
+    row_list = read_csv(csv_file_path, 1000)
+    print("Data extraction complete\n")
+    print("Starting Column removal ...")
+    reduced_entries = reduce_to_columns(row_list, preserved_columns)
+    print("Column removal complete\n")
+    print("Starting row formatting ...")
+    formatted_row_str = format_rows(reduced_entries)
+    print("Row formatting complete\n")
+    print(formatted_row_str)
+    #print("Starting data insert ...")
+    #insert_into_database(database_name, table_name, formatted_row_str)
+    #print("Data insert complete")
 main()
