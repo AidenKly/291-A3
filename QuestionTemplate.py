@@ -47,6 +47,7 @@ def main():
         conn, c = connect_to_db(database)
         c.execute("PRAGMA automatic_index = OFF")
         c.execute("PRAGMA foreign_keys = OFF")
+        #           FIGURE OUT HOW TO REMOVE PRIMARY KEYS
         
         # Start timer
         start_time = time.perf_counter() 
