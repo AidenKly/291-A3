@@ -77,7 +77,10 @@ def setup_database(database_name):
     setup_script_list = setup_file.read().split(';')
     setup_file.close()
     for command in setup_script_list:
-        c.execute(command)
+        try:
+            c.execute(command)
+        except:
+            pass
     conn.commit()
     conn.close()
 
