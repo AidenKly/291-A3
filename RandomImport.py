@@ -38,12 +38,13 @@ def reduce_to_columns(row_list:list[list], columns_to_save:tuple[int]): # DONE
         column_reduced_row_list.append(single_row)
     return column_reduced_row_list
 
-def format_rows(row_list): # DONE
+def format_rows(row_list): # NOT DONE, needs to properly format strings
     # Formats the rows to be inserted into the database from standard python formatting
     # to a long sting following propper sql formatting
     formatted_rows = []
     for row in row_list:
         str_row = ','.join(row)
+        str_row.replace('"', "'")
         formatted_rows.append(str_row)
     
     formatted_rows_str = '),\n('.join(formatted_rows)
