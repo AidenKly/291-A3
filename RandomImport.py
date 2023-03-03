@@ -65,6 +65,12 @@ def insert_into_database(database_name:str, table_name:str, formatted_row_str:st
     conn = sqlite3.connect(database_name) 
     c = conn.cursor()
     c.execute(' PRAGMA foreign_keys=ON; ')
+    setup_file = open("dbSetup.sql")
+    setup_script_list = setup_file.read().split(';')
+    setup_file.close()
+    for command in setup_script_list:
+        c.execute(command)
+    
     
     c.execute(f"INSERT INTO {table_name} VALUES\n{formatted_row_str}")
     conn.commit()
