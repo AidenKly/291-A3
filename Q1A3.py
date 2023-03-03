@@ -43,7 +43,7 @@ def commit_and_close_db(conn):
 
 def main():
     database_names = [SMALL_DB_NAME, MED_DB_NAME, LARGE_DB_NAME]
-    table_names = ['"Customers', '"Sellers', '"Orders']
+    table_names = ['"Customers', '"Sellers', '"Orders', '"Order_items']
     attribute_names = ['"customer_id"', '"customer_postal_code"', '"seller_id"', '"seller_postal_code"', '"order_id"', 'customer_id']
     attribute_domains = ["TEXT", "INTEGER", "TEXT", "INTEGER", "TEXT", "TEXT"]
     times = []
@@ -56,15 +56,14 @@ def main():
         c.execute("PRAGMA foreign_keys = OFF")
         #           FIGURE OUT HOW TO REMOVE PRIMARY KEYS
         try:
-            for i in range(len(table_names)):
+            for i in range(len(table_names) - 1):
                 c.execute('CREATE TABLE ' + table_names[i] + '2" (' + attribute_names[2 * i] + ' ' + attribute_domains[2 * i] + ', ' + attribute_names[2 * i + 1] + ' ' +  attribute_domains[2 * i + 1] + ');')
             c.execute('CREATE TABLE "Order_items2" ("order_id" TEXT, "order_item_id" INTEGER, "product_id" TEXT, "seller_id" TEXT);')
         except:
             pass
 
         for i in range(len(table_names)):
-            c.execute('INSERT INTO ' + table_names[i] + '2" SELECT * FROM ' + table_names[i] + ';')
-        
+            c.execute('INSERT INTO ' + table_names[i] + '2" SELECT * FROM ' + table_names[i] + '";')
         # Start timer
         start_time = time.perf_counter() 
         for i in range(50):
