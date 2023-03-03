@@ -66,10 +66,10 @@ def insert_into_database(database_name:str, table_name:str, formatted_row_str:st
 
     
 def main():
-    database_name = input("Enter a Database filename >> ")
-    table_name = input("Enter the name of the table to be inserted into >> ")
+    database_name = input("Enter a Database filename >> ") # DOES NOTHING FOR NOW
+    table_name = input("Enter the name of the table to be inserted into >> ") # DOES NOTHING FOR NOW
 
-    csv_file_path = input("Enter a csv path >> ")
+    csv_file_path = input("Enter a csv path >> ") # DOES NOTHING FOR NOW
     csv_file_path = "Dataset\\olist_customers_dataset.csv"
     preserved_columns = input("Enter the csv column indexes you want to insert into the database, seperated by COMMAS>> ")
     print()
