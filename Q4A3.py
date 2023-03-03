@@ -6,5 +6,5 @@ FROM Customers Cu, Orders Ord, Sellers S, Order_items Oi
 WHERE Cu.customer_id = Ord.customer_id AND
 Ord.order_id = Oi.order_id AND
 S.seller_id = Oi.seller_id AND
-Cu.customer_id = "{random_customer_id}"
+Cu.customer_postal_code = "{random_customer_id}"
 
