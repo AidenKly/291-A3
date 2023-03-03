@@ -18,11 +18,15 @@ import time, sqlite3, random
 #       1. Repeat steps 2-9
 #       2. DisconnectA3Large.db
 # 4. Plot query performance results.
-SMALL_DB_NAME = ?
-MED_DB_NAME = ?
-LARGE_DB_NAME = ?
 
-QUERY = ?
+SMALL_DB_NAME = "s.db"
+MED_DB_NAME = "m.db"
+LARGE_DB_NAME = "l.db"
+
+OUR_OPTIMIZED_INDEXING = ";"
+QUERY = ";"
+
+
 
 def connect_to_db(name):
     conn = sqlite3.connect(name) 
@@ -35,28 +39,57 @@ def commit_and_close_db(conn):
 
 def main():
     database_names = [SMALL_DB_NAME, MED_DB_NAME, LARGE_DB_NAME]
-    
+    times = []
+
     for database in database_names:
-        # NO INDEX
+        # NO INDEX -------------------------------------------
+        # Turns Off Indexing
         conn, c = connect_to_db(database)
         c.execute("PRAGMA automatic_index = OFF")
         c.execute("PRAGMA foreign_keys = OFF")
+        
+        # Start timer
+        start_time = time.perf_counter() 
         for i in range(50):
             c.execute(QUERY)
+        stop_time = time.perf_counter()
+
+        no_index_time_avg = (stop_time - start_time) / 50
+        times.append(no_index_time_avg) # Append to time list
+        print(no_index_time_avg)
         commit_and_close_db(conn)
 
-        # SELF INDEX
+        # SELF INDEX -----------------------------------------
         conn, c = connect_to_db(database)
-        c.execute("PRAGMA PRAGMA automatic_index = ON")
+        c.execute("PRAGMA automatic_index = ON")
         c.execute("PRAGMA foreign_keys = ON")
+
+        start_time = time.perf_counter() 
         for i in range(50):
             c.execute(QUERY)
+        stop_time = time.perf_counter()
+
+        self_index_time_avg = (stop_time - start_time) / 50
+        times.append(self_index_time_avg) # Append to time list
+        print(self_index_time_avg)
         commit_and_close_db(conn)
 
-        # OUR INDEXING
+
+
+        # OUR INDEXING --------------------------------------
         conn, c = connect_to_db(database)
-        c.execute(SELF_OPTIMIZED_HOW)
-        c.execute(SELF_OPTIMIZED_HOW)
+        c.execute(OUR_OPTIMIZED_INDEXING)
+        c.execute(OUR_OPTIMIZED_INDEXING)
+
+        start_time = time.perf_counter() 
         for i in range(50):
             c.execute(QUERY)
+        stop_time = time.perf_counter()
+
+        our_index_time_avg = (stop_time - start_time) / 50
+        times.append(our_index_time_avg) # Append to time list
+        print(our_index_time_avg)
         commit_and_close_db(conn)
+
+
+main()
