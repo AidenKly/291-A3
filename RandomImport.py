@@ -81,7 +81,7 @@ def setup_database(database_name):
     conn.commit()
     conn.close()
 
-def insertion_setup(data_size:int, table_name, database_name, csv_file_path, preserved_columns):
+def insertion_setup(data_size, table_name, database_name, csv_file_path, preserved_columns):
     
     
     print("Starting Data extraction ...")
