@@ -81,7 +81,7 @@ def setup_database(database_name):
     conn.commit()
     conn.close()
 
-def insertion_setup(data_size, table_name):
+def insertion_setup(data_size, table_name, database_names):
     csv_file_path = input("Enter the FULL csv path for the " + table_name + " table data >> ") 
     
     preserved_columns = input("Enter the csv column indexes you want to insert into the " + table_name + "table, seperated by COMMAS >> ")
@@ -102,7 +102,7 @@ def insertion_setup(data_size, table_name):
         print("Row formatting complete\n")
         print(formatted_row_str)
         print("Starting data insert ...")
-        insert_into_database(database_name, table_name, formatted_row_str)
+        insert_into_database(database_names[i], table_name, formatted_row_str)
         print("Data insert complete")
 
 def main():
@@ -138,7 +138,7 @@ def main():
         setup_database(database_names[i])
     
     for i in range(len(table_names)):
-        insertion_setup(table_sizes[i], table_names[i])
+        insertion_setup(table_sizes[i], table_names[i], database_names)
       
     
 main()
