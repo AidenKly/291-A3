@@ -69,6 +69,7 @@ def insert_into_database(database_name, table_name, formatted_row_str): # DONE
     conn.close()
 
 def setup_database(database_name):
+    # sets up the database using the "dbSetup.sql" file
     conn = sqlite3.connect(database_name) 
     c = conn.cursor()
     c.execute(' PRAGMA foreign_keys=ON; ')
@@ -130,7 +131,7 @@ def main():
     table_sizes = {customer_table_sizes, seller_table_sizes, order_table_sizes, order_items_table_sizes}
     
     database_titles = {'Small', 'Medium', 'Large'}
-    database_names[]
+    database_names = []
 
     for i in range(len(database_titles)):
         database_names.append(input("Enter the FULL Database filepath for the " + database_titles[i] + ">> "))
