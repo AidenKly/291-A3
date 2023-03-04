@@ -27,8 +27,11 @@ SMALL_DB_NAME = "s.db"
 MED_DB_NAME = "m.db"
 LARGE_DB_NAME = "l.db"
 
-OUR_OPTIMIZED_INDEXING = ";"
-QUERY = ";"
+ORDERS_INDEXING = "CREATE INDEX indx_orders_orderid ON Orders (order_id, customer_id);"
+ORDER_ITEMS_INDEXING = "CREATE INDEX indx_order_items_order_id ON Order_items (order_id, order_item_id);"
+CUSTOMER_INDEXING = "CREATE INDEX indx_customer_customerid ON Customers (customer_id, customer_postal_code);"
+QUERY = "SELECT customer_postal_code FROM Customers2;"
+QUERY2 = "SELECT customer_postal_code FROM Customers;"
 
 
 
@@ -52,8 +55,8 @@ def main():
         # NO INDEX -------------------------------------------
         # Turns Off Indexing
         conn, c = connect_to_db(database)
-        c.execute("PRAGMA automatic_index = OFF")
-        c.execute("PRAGMA foreign_keys = OFF")
+        c.execute("PRAGMA automatic_index = OFF;")
+        c.execute("PRAGMA foreign_keys = OFF;")
         #           FIGURE OUT HOW TO REMOVE PRIMARY KEYS
         try:
             for i in range(len(table_names) - 1):
@@ -64,13 +67,15 @@ def main():
 
         for i in range(len(table_names)):
             c.execute('INSERT INTO ' + table_names[i] + '2" SELECT * FROM ' + table_names[i] + '";')
+        
         # Start timer
         start_time = time.perf_counter() 
         for i in range(50):
             c.execute(QUERY)
-            #---------------
-            # ADD MORE HERE IF NEEDED
-            #---------------
+            codes = c.fetchall()
+            code = random.choice(codes)
+            c.execute("SELECT COUNT(O.order_id) FROM Orders2 O, Customers2 C, Order_items2 OI WHERE O.order_id = OI.order_id AND C.customer_id = O.customer_id AND OI.order_item_id > 1 AND C.customer_postal_code = " + str(code[0]) + ';')
+            
         stop_time = time.perf_counter()
 
         no_index_time_avg = (stop_time - start_time) / 50
@@ -80,15 +85,15 @@ def main():
 
         # SELF INDEX -----------------------------------------
         conn, c = connect_to_db(database)
-        c.execute("PRAGMA automatic_index = ON")
-        c.execute("PRAGMA foreign_keys = ON")
+        c.execute("PRAGMA automatic_index = ON;")
+        c.execute("PRAGMA foreign_keys = ON;")
 
         start_time = time.perf_counter() 
         for i in range(50):
-            c.execute(QUERY)
-            #---------------
-            # ADD MORE HERE IF NEEDED
-            #---------------
+            c.execute(QUERY2)
+            codes = c.fetchall()
+            code = random.choice(codes)
+            c.execute("SELECT COUNT(O.order_id) FROM Orders O, Customers C, Order_items OI WHERE O.order_id = OI.order_id AND C.customer_id = O.customer_id AND OI.order_item_id > 1 AND C.customer_postal_code = " + str(code[0]) + ';')
         stop_time = time.perf_counter()
 
         self_index_time_avg = (stop_time - start_time) / 50
@@ -100,15 +105,16 @@ def main():
 
         # OUR INDEXING --------------------------------------
         conn, c = connect_to_db(database)
-        c.execute(OUR_OPTIMIZED_INDEXING)
-        c.execute(OUR_OPTIMIZED_INDEXING)
+        c.execute(ORDERS_INDEXING)
+        c.execute(ORDER_ITEMS_INDEXING)
+        c.execute(CUSTOMER_INDEXING)
 
         start_time = time.perf_counter() 
         for i in range(50):
-            c.execute(QUERY)
-            #---------------
-            # ADD MORE HERE IF NEEDED
-            #---------------
+            c.execute(QUERY2)
+            codes = c.fetchall()
+            code = random.choice(codes)
+            c.execute("SELECT COUNT(O.order_id) FROM Orders O, Customers C, Order_items OI WHERE O.order_id = OI.order_id AND C.customer_id = O.customer_id AND OI.order_item_id > 1 AND C.customer_postal_code = " + str(code[0]) + ';')
         stop_time = time.perf_counter()
 
         our_index_time_avg = (stop_time - start_time) / 50
