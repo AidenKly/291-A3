@@ -19,7 +19,7 @@ FOREIGN KEY("customer_id") REFERENCES "Customers"("customer_id")
 
 CREATE TABLE "Order_items" ( --olist_order_items_dataset.csv
 "order_id" TEXT, -- order_id
-"order_item_id" INTEGER, -- order_item_id
+"order_item_id" INTEGER, -- order_item_id (COUNT OF ITEMS IN ORDER)
 "product_id" TEXT, -- product_id
 "seller_id" TEXT, -- seller_id
 PRIMARY KEY("order_id","order_item_id","product_id","seller_id"),
