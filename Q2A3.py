@@ -52,7 +52,11 @@ def main():
         # Start timer
         start_time = time.perf_counter() 
         for i in range(50):
-            c.execute("SELECT i.order_id as oid, i.order_item_id FROM Orders o, Order_items i WHERE o.order_id = i.order_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items);")
+            c.execute(
+                "CREATE VIEW OrderSize AS SELECT i.order_id as oid, i.order_item_id FROM Orders o, Order_items i WHERE o.order_id = i.order_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items);"
+            )
+
+            c.execute ("drop view OrderSize;")
         stop_time = time.perf_counter()
 
         no_index_time_avg = (stop_time - start_time) / 50
@@ -67,7 +71,12 @@ def main():
 
         start_time = time.perf_counter() 
         for i in range(50):
-            c.execute("SELECT i.order_id as oid, i.order_item_id FROM Orders o, Order_items i WHERE o.order_id = i.order_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items);")
+            c.execute(
+                "CREATE VIEW OrderSize AS SELECT i.order_id as oid, i.order_item_id FROM Orders o, Order_items i WHERE o.order_id = i.order_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items);"
+            )
+
+            c.execute ("drop view OrderSize;")
+
         stop_time = time.perf_counter()
 
         self_index_time_avg = (stop_time - start_time) / 50
@@ -84,7 +93,11 @@ def main():
 
         start_time = time.perf_counter() 
         for i in range(50):
-            c.execute("SELECT i.order_id as oid, i.order_item_id FROM Orders o, Order_items i WHERE o.order_id = i.order_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items);")
+            c.execute(
+                "CREATE VIEW OrderSize AS SELECT i.order_id as oid, i.order_item_id FROM Orders o, Order_items i WHERE o.order_id = i.order_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items);"
+            )
+
+            c.execute ("drop view OrderSize;")
         stop_time = time.perf_counter()
 
         our_index_time_avg = (stop_time - start_time) / 50
