@@ -1,4 +1,4 @@
-import time, sqlite3, random
+import time, sqlite3, random, matplotlib.pyplot as plt, numpy as np
 # 1. Connect to A3Small.db
 #       1. Set scenario “Uninformed”
 #       2. Execute Q1 50 times (collecting query execution time).
@@ -129,6 +129,20 @@ def main():
         times.append(our_index_time_avg) # Append to time list
         print(our_index_time_avg)
         commit_and_close_db(conn)
-
+        
+    x = ['SmallDB', 'MediumDB', 'LargeDB']
+    y1 = np.array([times[0], times[3], times[6]])
+    y2 = np.array([times[1], times[4], times[7]])
+    y3 = np.array([times[2], times[5], times[8]])
+    
+    # plot bars in stack manner
+    plt.bar(x, y1, color='r')
+    plt.bar(x, y2, bottom=y1, color='b')
+    plt.bar(x, y3, bottom=y1+y2, color='y')
+    plt.xlabel("Databases")
+    plt.ylabel("Time in ms")
+    plt.legend(["Uninformed", "Self-Optimized", "User Optimized"])
+    plt.title("Query 2 (Runtime In Seconds)")
+    plt.savefig("Q2A3chart.png")
 
 main()
