@@ -44,6 +44,7 @@ def main():
     times = []
 
     for database in database_names:
+        
         # NO INDEX -------------------------------------------
         # Turns Off Indexing
         conn, c = connect_to_db(database)
@@ -61,7 +62,6 @@ def main():
         for i in range(len(table_names)):
             c.execute('INSERT INTO ' + table_names[i] + '2" SELECT * FROM ' + table_names[i] + '";')
         
-        
         # Start timer
         start_time = time.perf_counter() 
         for i in range(50):
@@ -72,6 +72,7 @@ def main():
         times.append(no_index_time_avg) # Append to time list
         print(no_index_time_avg)
         commit_and_close_db(conn)
+
 
         # SELF INDEX -----------------------------------------
         conn, c = connect_to_db(database)
@@ -92,9 +93,8 @@ def main():
 
         # OUR INDEXING --------------------------------------
         conn, c = connect_to_db(database)
-        # try:
-        # c.execute("PRAGMA automatic_index = OFF")
-        # c.execute("PRAGMA foreign_keys = OFF")
+        c.execute("drop index if exists indx_orders_orderid")
+        c.execute("drop index if exists indx_order_items_order_id")
         c.execute(ORDERS_INDEXING)
         c.execute(ORDER_ITEMS_INDEXING)
 
@@ -103,8 +103,7 @@ def main():
         for i in range(50):
             c.execute("SELECT i.order_id as oid, i.order_item_id FROM Orders o, Order_items i WHERE o.order_id = i.order_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items);")
         stop_time = time.perf_counter()
-        c.execute("drop index indx_orders_orderid")
-        c.execute("drop index indx_order_items_order_id")
+        
         our_index_time_avg = (stop_time - start_time) / 50
         times.append(our_index_time_avg) # Append to time list
         print(our_index_time_avg)

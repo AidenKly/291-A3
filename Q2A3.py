@@ -46,6 +46,8 @@ def main():
         # NO INDEX -------------------------------------------
         # Turns Off Indexing
         conn, c = connect_to_db(database)
+        c.execute("drop index if exists indx_orders_orderid")
+        c.execute("drop index if exists indx_order_items_order_id") 
         c.execute("PRAGMA automatic_index = OFF")
         c.execute("PRAGMA foreign_keys = OFF")
         #           FIGURE OUT HOW TO REMOVE PRIMARY KEYS
@@ -62,12 +64,16 @@ def main():
         
         # Start timer
         start_time = time.perf_counter() 
+        c.execute("CREATE VIEW OrderSize AS SELECT i.order_id as oid, i.order_item_id  as size FROM Orders2 o, Order_items2 i WHERE o.order_id = i.order_id;")
         for i in range(50):
-            c.execute(
-                "CREATE VIEW OrderSize AS SELECT i.order_id as oid, i.order_item_id FROM Orders2 o, Order_items2 i WHERE o.order_id = i.order_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items2);"
-            )
+            try:
+                c.execute(
+                    "SELECT oid FROM OrderSize WHERE size > (SELECT AVG(order_item_id) FROM Order_items2);"
+                )
 
-            c.execute ("drop view OrderSize;")
+            except sqlite3.Error as e:
+                print(e);
+        c.execute ("drop view OrderSize;")
         stop_time = time.perf_counter()
 
         no_index_time_avg = (stop_time - start_time) / 50
@@ -81,11 +87,16 @@ def main():
         c.execute("PRAGMA foreign_keys = ON")
 
         start_time = time.perf_counter() 
+        c.execute("CREATE VIEW OrderSize AS SELECT i.order_id as oid, i.order_item_id  as size FROM Orders o, Order_items i WHERE o.order_id = i.order_id;")
         for i in range(50):
-            c.execute(
-                "CREATE VIEW OrderSize AS SELECT i.order_id as oid, i.order_item_id FROM Orders o, Order_items i WHERE o.order_id = i.order_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items);"
-            )
-            c.execute ("drop view OrderSize;")
+            try:
+                c.execute(
+                    "SELECT oid FROM OrderSize WHERE size > (SELECT AVG(order_item_id) FROM Order_items);"
+                )
+
+            except sqlite3.Error as e:
+                print(e);
+        c.execute ("drop view OrderSize;")
 
         stop_time = time.perf_counter()
 
@@ -96,25 +107,24 @@ def main():
 
         # OUR INDEXING --------------------------------------
         conn, c = connect_to_db(database)
-        # c.execute("PRAGMA automatic_index = OFF")
-        # c.execute("PRAGMA foreign_keys = OFF")
+        c.execute("PRAGMA automatic_index = ON")
+        c.execute("PRAGMA foreign_keys = ON")
         c.execute(ORDERS_INDEXING)
         c.execute(ORDER_ITEMS_INDEXING)
         
         start_time = time.perf_counter() 
-        
+        c.execute("CREATE VIEW OrderSize AS SELECT i.order_id as oid, i.order_item_id  as size FROM Orders o, Order_items i WHERE o.order_id = i.order_id;")
         for i in range(50):
-            c.execute(
-                "CREATE VIEW OrderSize AS SELECT i.order_id as oid, i.order_item_id FROM Orders o, Order_items i WHERE o.order_id = i.order_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items);"
-            )
+            try:
+                c.execute(
+                    "SELECT oid FROM OrderSize WHERE size > (SELECT AVG(order_item_id) FROM Order_items);"
+                )
 
-            c.execute ("drop view OrderSize;")
-        
+            except sqlite3.Error as e:
+                print(e)
+        c.execute ("drop view OrderSize;")
         stop_time = time.perf_counter()
-        c.execute("drop index indx_orders_orderid")
-        c.execute("drop index indx_order_items_order_id")
         
-
         our_index_time_avg = (stop_time - start_time) / 50
         times.append(our_index_time_avg) # Append to time list
         print(our_index_time_avg)
