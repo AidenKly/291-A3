@@ -32,6 +32,10 @@ ORDER_ITEMS_INDEXING = "CREATE INDEX indx_order_items_order_id ON Order_items (o
 CUSTOMER_INDEXING = "CREATE INDEX indx_customer_customerid ON Customers (customer_id, customer_postal_code);"
 QUERY = "SELECT customer_postal_code FROM Customers2;"
 QUERY2 = "SELECT customer_postal_code FROM Customers;"
+DATABASE_NAMES = [SMALL_DB_NAME, MED_DB_NAME, LARGE_DB_NAME]
+TABLE_NAMES = ['"Customers', '"Sellers', '"Orders', '"Order_items']
+ATTRIBUTE_NAMES = ['"customer_id"', '"customer_postal_code"', '"seller_id"', '"seller_postal_code"', '"order_id"', 'customer_id']
+ATTRIBUTE_DOMAINS = ["TEXT", "INTEGER", "TEXT", "INTEGER", "TEXT", "TEXT"]
 
 
 
@@ -44,29 +48,28 @@ def commit_and_close_db(conn):
     conn.commit()
     conn.close()
 
+def setup_uninformed_tables(c):
+    c.execute("PRAGMA automatic_index = OFF;")
+    c.execute("PRAGMA foreign_keys = OFF;")
+    #           FIGURE OUT HOW TO REMOVE PRIMARY KEYS
+    try:
+        for i in range(len(TABLE_NAMES) - 1):
+            c.execute('CREATE TABLE ' + TABLE_NAMES[i] + '2" (' + ATTRIBUTE_NAMES[2 * i] + ' ' + ATTRIBUTE_DOMAINS[2 * i] + ', ' + ATTRIBUTE_NAMES[2 * i + 1] + ' ' +  ATTRIBUTE_DOMAINS[2 * i + 1] + ');')
+        c.execute('CREATE TABLE "Order_items2" ("order_id" TEXT, "order_item_id" INTEGER, "product_id" TEXT, "seller_id" TEXT);')
+    except:
+        pass
+    for i in range(len(TABLE_NAMES)):
+            c.execute('INSERT INTO ' + TABLE_NAMES[i] + '2" SELECT * FROM ' + TABLE_NAMES[i] + '";')
+
 def main():
-    database_names = [SMALL_DB_NAME, MED_DB_NAME, LARGE_DB_NAME]
-    table_names = ['"Customers', '"Sellers', '"Orders', '"Order_items']
-    attribute_names = ['"customer_id"', '"customer_postal_code"', '"seller_id"', '"seller_postal_code"', '"order_id"', 'customer_id']
-    attribute_domains = ["TEXT", "INTEGER", "TEXT", "INTEGER", "TEXT", "TEXT"]
     times = []
 
-    for database in database_names:
+    for database in DATABASE_NAMES:
         # NO INDEX -------------------------------------------
         # Turns Off Indexing
         conn, c = connect_to_db(database)
-        c.execute("PRAGMA automatic_index = OFF;")
-        c.execute("PRAGMA foreign_keys = OFF;")
-        #           FIGURE OUT HOW TO REMOVE PRIMARY KEYS
-        try:
-            for i in range(len(table_names) - 1):
-                c.execute('CREATE TABLE ' + table_names[i] + '2" (' + attribute_names[2 * i] + ' ' + attribute_domains[2 * i] + ', ' + attribute_names[2 * i + 1] + ' ' +  attribute_domains[2 * i + 1] + ');')
-            c.execute('CREATE TABLE "Order_items2" ("order_id" TEXT, "order_item_id" INTEGER, "product_id" TEXT, "seller_id" TEXT);')
-        except:
-            pass
-
-        for i in range(len(table_names)):
-            c.execute('INSERT INTO ' + table_names[i] + '2" SELECT * FROM ' + table_names[i] + '";')
+        
+        setup_uninformed_tables(c)
         
         # Start timer
         start_time = time.perf_counter() 
