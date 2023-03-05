@@ -3,7 +3,8 @@
 
 
 
-import time, sqlite3, random
+import time, sqlite3, random, matplotlib.pyplot as plt, numpy as np
+
 # 1. Connect to A3Small.db
 #       1. Set scenario “Uninformed”
 #       2. Execute Q1 50 times (collecting query execution time).
@@ -28,7 +29,7 @@ SMALL_DB_NAME = "s.db"
 MED_DB_NAME = "m.db"
 LARGE_DB_NAME = "l.db"
 
-OUR_OPTIMIZED_INDEXING = ";"
+
 CUSTOMER_SELECT_QUERY = "SELECT Cu.customer_id FROM Customers Cu, Orders Ord WHERE Cu.customer_id = Ord.customer_id GROUP BY Cu.customer_id HAVING COUNT(order_id) > 1;"
 
 # select a random result from previous
@@ -38,7 +39,7 @@ CUSTOMER_SELECT_QUERY = "SELECT Cu.customer_id FROM Customers Cu, Orders Ord WHE
 # WHERE Cu.customer_id = Ord.customer_id AND
 # customer_id = "{random_customer_id}"
 
-# run next query for ever one of previou
+# run next query for ever one of previous
 
 # SELECT COUNT(DISTINCT seller_postal_code) 
 # FROM Customers Cu, Orders Ord, Sellers S, Order_items Oi
@@ -57,6 +58,23 @@ def connect_to_db(name):
 def commit_and_close_db(conn):
     conn.commit()
     conn.close()
+
+def create_graph(times):
+    Uninformed_times = list(times[0,3,6])
+    Self_optimized_times = list(times[1,4,7])
+    User_optimized_times = list(times[2,5,8])
+
+    x_axies_labels = ["SmallDB", "MediumDB", "LargeDB"]
+    Uninformed = np.array(Uninformed_times)
+    Self_optimized = np.array(Self_optimized_times)
+    User_optimized = np.array(User_optimized_times)
+    plt.bar(x_axies_labels, Uninformed, color='b')
+    plt.bar(x_axies_labels, Uninformed + Self_optimized_times, color='r')
+    plt.bar(x_axies_labels, Uninformed + Self_optimized_times + User_optimized_times, color='y')
+    plt.legend(["Uninformed", "Self-optimized", "User-optimized"])
+    plt.title("Query 4 (Runtime in seconds)")
+    plt.savefig()
+    
 
 def main():
     database_names = [SMALL_DB_NAME, MED_DB_NAME, LARGE_DB_NAME]
@@ -198,5 +216,8 @@ def main():
         print(our_index_time_avg)
         commit_and_close_db(conn)
 
+
+
+    create_graph(times)
 
 main()
