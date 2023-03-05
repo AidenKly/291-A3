@@ -60,6 +60,10 @@ def main():
 
         for i in range(len(table_names)):
             c.execute('INSERT INTO ' + table_names[i] + '2" SELECT * FROM ' + table_names[i] + '";')
+
+
+
+        
         # Start timer
         start_time = time.perf_counter() 
         for i in range(50):
