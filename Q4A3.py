@@ -1,18 +1,6 @@
---# Q4: Choose a random customer with more than one order and for that customer's orders, find in how
---# many (unique) postal codes the sellers provided those orders.
+# Q4: Choose a random customer with more than one order and for that customer's orders, find in how
+# many (unique) postal codes the sellers provided those orders.
 
-
-
-
-
--- run next query for ever one of previous
-
-SELECT COUNT(DISTINCT seller_postal_code) 
-FROM Customers Cu, Orders Ord, Sellers S, Order_items Oi
-WHERE Cu.customer_id = Ord.customer_id AND
-Ord.order_id = Oi.order_id AND
-S.seller_id = Oi.seller_id AND
-Cu.order_id = "{order_id_from_random_customer}"
 
 
 import time, sqlite3, random
@@ -41,16 +29,21 @@ MED_DB_NAME = "m.db"
 LARGE_DB_NAME = "l.db"
 
 OUR_OPTIMIZED_INDEXING = ";"
-CUSTOMER_SELECT_QUERY = "SELECT Cu.customer_id \
-                        FROM Customers Cu, Orders Ord \
-                        WHERE Cu.customer_id = Ord.customer_id\
-                        GROUP BY Cu.customer_id\
-                        HAVING COUNT(order_id) > 1;"
+CUSTOMER_SELECT_QUERY = "SELECT Cu.customer_id FROM Customers Cu, Orders Ord  WHERE Cu.customer_id = Ord.customer_id GROUP BY Cu.customer_id HAVING COUNT(order_id) > 1;"
+
 # select a random result from previous
-QUERY = f'SELECT Ord.order_id\
+ORDER_IDs_FOR_CUSTOMER_QUERY = 'SELECT Ord.order_id\
 FROM Customers Cu, Orders Ord \
 WHERE Cu.customer_id = Ord.customer_id AND\
 customer_id = "{random_customer_id}"'
+
+# run next query for ever one of previous
+POSTAL_CODE_FOR_ORDER_QUERY = 'SELECT COUNT(DISTINCT seller_postal_code)  \
+FROM Customers Cu, Orders Ord, Sellers S, Order_items Oi \
+WHERE Cu.customer_id = Ord.customer_id AND \
+Ord.order_id = Oi.order_id AND \
+S.seller_id = Oi.seller_id AND \
+Cu.order_id = "{order_id_from_random_customer}"'
 
 
 
@@ -93,7 +86,24 @@ def main():
         # Start timer
         start_time = time.perf_counter() 
         for i in range(50):
-            c.execute(QUERY)
+            c.execute(CUSTOMER_SELECT_QUERY)
+            customers = c.fetchall()
+            try:
+                random_customer_id = random.choice(customers)
+            except:
+                random_customer_id = "NONE"
+            c.execute(f'SELECT Ord.order_id\
+                        FROM Customers Cu, Orders Ord \
+                        WHERE Cu.customer_id = Ord.customer_id AND\
+                        Cu.customer_id = "{random_customer_id}"')
+            order_ids = c.fetchall()
+            for order_id_from_random_customer in order_ids:
+                c.execute(f'SELECT COUNT(DISTINCT seller_postal_code)  \
+                            FROM Customers Cu, Orders Ord, Sellers S, Order_items Oi \
+                            WHERE Cu.customer_id = Ord.customer_id AND \
+                            Ord.order_id = Oi.order_id AND \
+                            S.seller_id = Oi.seller_id AND \
+                            Cu.order_id = "{order_id_from_random_customer}"')
             #---------------
             # ADD MORE HERE IF NEEDED
             #---------------
@@ -111,7 +121,24 @@ def main():
 
         start_time = time.perf_counter() 
         for i in range(50):
-            c.execute(QUERY)
+            c.execute(CUSTOMER_SELECT_QUERY)
+            customers = c.fetchall()
+            try:
+                random_customer_id = random.choice(customers)
+            except:
+                random_customer_id = "NONE"
+            c.execute(f'SELECT Ord.order_id\
+                        FROM Customers Cu, Orders Ord \
+                        WHERE Cu.customer_id = Ord.customer_id AND\
+                        Cu.customer_id = "{random_customer_id}"')
+            order_ids = c.fetchall()
+            for order_id_from_random_customer in order_ids:
+                c.execute(f'SELECT COUNT(DISTINCT seller_postal_code)  \
+                            FROM Customers Cu, Orders Ord, Sellers S, Order_items Oi \
+                            WHERE Cu.customer_id = Ord.customer_id AND \
+                            Ord.order_id = Oi.order_id AND \
+                            S.seller_id = Oi.seller_id AND \
+                            Cu.order_id = "{order_id_from_random_customer}"')
             #---------------
             # ADD MORE HERE IF NEEDED
             #---------------
@@ -131,7 +158,24 @@ def main():
 
         start_time = time.perf_counter() 
         for i in range(50):
-            c.execute(QUERY)
+            c.execute(CUSTOMER_SELECT_QUERY)
+            customers = c.fetchall()
+            try:
+                random_customer_id = random.choice(customers)
+            except:
+                random_customer_id = "NONE"
+            c.execute(f'SELECT Ord.order_id\
+                        FROM Customers Cu, Orders Ord \
+                        WHERE Cu.customer_id = Ord.customer_id AND\
+                        Cu.customer_id = "{random_customer_id}"')
+            order_ids = c.fetchall()
+            for order_id_from_random_customer in order_ids:
+                c.execute(f'SELECT COUNT(DISTINCT seller_postal_code)  \
+                            FROM Customers Cu, Orders Ord, Sellers S, Order_items Oi \
+                            WHERE Cu.customer_id = Ord.customer_id AND \
+                            Ord.order_id = Oi.order_id AND \
+                            S.seller_id = Oi.seller_id AND \
+                            Cu.order_id = "{order_id_from_random_customer}"')
             #---------------
             # ADD MORE HERE IF NEEDED
             #---------------
