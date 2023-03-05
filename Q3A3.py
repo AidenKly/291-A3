@@ -23,9 +23,8 @@ SMALL_DB_NAME = "s.db"
 MED_DB_NAME = "m.db"
 LARGE_DB_NAME = "l.db"
 
-OUR_OPTIMIZED_INDEXING = ";"
-QUERY = ";"
-
+ORDERS_INDEXING = "CREATE INDEX indx_orders_orderid ON Orders (order_id, customer_id);"
+ORDER_ITEMS_INDEXING = "CREATE INDEX indx_order_items_order_id ON Order_items (order_id, order_item_id);"
 
 
 def connect_to_db(name):
@@ -39,6 +38,9 @@ def commit_and_close_db(conn):
 
 def main():
     database_names = [SMALL_DB_NAME, MED_DB_NAME, LARGE_DB_NAME]
+    table_names = ['"Customers', '"Sellers', '"Orders', '"Order_items']
+    attribute_names = ['"customer_id"', '"customer_postal_code"', '"seller_id"', '"seller_postal_code"', '"order_id"', 'customer_id']
+    attribute_domains = ["TEXT", "INTEGER", "TEXT", "INTEGER", "TEXT", "TEXT"]
     times = []
 
     for database in database_names:
@@ -49,10 +51,21 @@ def main():
         c.execute("PRAGMA foreign_keys = OFF")
         #           FIGURE OUT HOW TO REMOVE PRIMARY KEYS
         
+        try:
+            for i in range(len(table_names) - 1):
+                c.execute('CREATE TABLE ' + table_names[i] + '2" (' + attribute_names[2 * i] + ' ' + attribute_domains[2 * i] + ', ' + attribute_names[2 * i + 1] + ' ' +  attribute_domains[2 * i + 1] + ');')
+            c.execute('CREATE TABLE "Order_items2" ("order_id" TEXT, "order_item_id" INTEGER, "product_id" TEXT, "seller_id" TEXT);')
+        except:
+            pass
+
+        for i in range(len(table_names)):
+            c.execute('INSERT INTO ' + table_names[i] + '2" SELECT * FROM ' + table_names[i] + '";')
+        
+        
         # Start timer
         start_time = time.perf_counter() 
         for i in range(50):
-            c.execute("SELECT i.order_id as oid, i.order_item_id FROM Orders o, Order_items i WHERE o.order_id = i.order_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items);")
+            c.execute("SELECT i.order_id as oid, i.order_item_id FROM Orders2 o, Order_items2 i WHERE o.order_id = i.order_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items2);")
         stop_time = time.perf_counter()
 
         no_index_time_avg = (stop_time - start_time) / 50
@@ -79,14 +92,19 @@ def main():
 
         # OUR INDEXING --------------------------------------
         conn, c = connect_to_db(database)
-        c.execute(OUR_OPTIMIZED_INDEXING)
-        c.execute(OUR_OPTIMIZED_INDEXING)
+        # try:
+        # c.execute("PRAGMA automatic_index = OFF")
+        # c.execute("PRAGMA foreign_keys = OFF")
+        c.execute(ORDERS_INDEXING)
+        c.execute(ORDER_ITEMS_INDEXING)
 
+        
         start_time = time.perf_counter() 
         for i in range(50):
             c.execute("SELECT i.order_id as oid, i.order_item_id FROM Orders o, Order_items i WHERE o.order_id = i.order_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items);")
         stop_time = time.perf_counter()
-
+        c.execute("drop index indx_orders_orderid")
+        c.execute("drop index indx_order_items_order_id")
         our_index_time_avg = (stop_time - start_time) / 50
         times.append(our_index_time_avg) # Append to time list
         print(our_index_time_avg)
