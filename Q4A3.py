@@ -29,21 +29,23 @@ MED_DB_NAME = "m.db"
 LARGE_DB_NAME = "l.db"
 
 OUR_OPTIMIZED_INDEXING = ";"
-CUSTOMER_SELECT_QUERY = "SELECT Cu.customer_id FROM Customers Cu, Orders Ord  WHERE Cu.customer_id = Ord.customer_id GROUP BY Cu.customer_id HAVING COUNT(order_id) > 1;"
+CUSTOMER_SELECT_QUERY = "SELECT Cu.customer_id FROM Customers Cu, Orders Ord WHERE Cu.customer_id = Ord.customer_id GROUP BY Cu.customer_id HAVING COUNT(order_id) > 1;"
 
 # select a random result from previous
-ORDER_IDs_FOR_CUSTOMER_QUERY = 'SELECT Ord.order_id\
-FROM Customers Cu, Orders Ord \
-WHERE Cu.customer_id = Ord.customer_id AND\
-customer_id = "{random_customer_id}"'
 
-# run next query for ever one of previous
-POSTAL_CODE_FOR_ORDER_QUERY = 'SELECT COUNT(DISTINCT seller_postal_code)  \
-FROM Customers Cu, Orders Ord, Sellers S, Order_items Oi \
-WHERE Cu.customer_id = Ord.customer_id AND \
-Ord.order_id = Oi.order_id AND \
-S.seller_id = Oi.seller_id AND \
-Cu.order_id = "{order_id_from_random_customer}"'
+# SELECT Ord.order_id
+# FROM Customers Cu, Orders Ord 
+# WHERE Cu.customer_id = Ord.customer_id AND
+# customer_id = "{random_customer_id}"
+
+# run next query for ever one of previou
+
+# SELECT COUNT(DISTINCT seller_postal_code) 
+# FROM Customers Cu, Orders Ord, Sellers S, Order_items Oi
+# WHERE Cu.customer_id = Ord.customer_id AND
+# Ord.order_id = Oi.order_id AND
+# S.seller_id = Oi.seller_id AND
+# Cu.order_id = "{order_id_from_random_customer}
 
 
 
@@ -64,11 +66,19 @@ def main():
     times = []
 
     for database in database_names:
+        print("\n" + database)
         # NO INDEX -------------------------------------------
         # Turns Off Indexing
         conn, c = connect_to_db(database)
+        c.execute("DROP TABLE IF EXISTS indx_orders_orderid;")
+        c.execute("DROP TABLE IF EXISTS indx_order_items_orderid;")
+        c.execute("DROP TABLE IF EXISTS indx_customer_customerid;")
+        c.execute("DROP TABLE IF EXISTS indx_sellers_sellerid;")
+
         c.execute("PRAGMA automatic_index = OFF")
         c.execute("PRAGMA foreign_keys = OFF")
+        
+        
         #           FIGURE OUT HOW TO REMOVE PRIMARY KEYS
         try:
             for i in range(len(table_names) - 1):
@@ -93,13 +103,13 @@ def main():
             except:
                 random_customer_id = "NONE"
             c.execute(f'SELECT Ord.order_id\
-                        FROM Customers Cu, Orders Ord \
+                        FROM Customers2 Cu, Orders2 Ord \
                         WHERE Cu.customer_id = Ord.customer_id AND\
                         Cu.customer_id = "{random_customer_id}"')
             order_ids = c.fetchall()
             for order_id_from_random_customer in order_ids:
                 c.execute(f'SELECT COUNT(DISTINCT seller_postal_code)  \
-                            FROM Customers Cu, Orders Ord, Sellers S, Order_items Oi \
+                            FROM Customers2 Cu, Orders2 Ord, Sellers2 S, Order_items2 Oi \
                             WHERE Cu.customer_id = Ord.customer_id AND \
                             Ord.order_id = Oi.order_id AND \
                             S.seller_id = Oi.seller_id AND \
@@ -153,8 +163,10 @@ def main():
 
         # OUR INDEXING --------------------------------------
         conn, c = connect_to_db(database)
-        c.execute(OUR_OPTIMIZED_INDEXING)
-        c.execute(OUR_OPTIMIZED_INDEXING)
+        c.execute("CREATE INDEX IF NOT EXISTS indx_orders_orderid ON Orders (order_id, customer_id);")
+        c.execute("CREATE INDEX IF NOT EXISTS indx_order_items_orderid ON Order_items (order_id, seller_id);")
+        c.execute("CREATE INDEX IF NOT EXISTS indx_customer_customerid ON Customers (customer_id, customer_postal_code);")
+        c.execute("CREATE INDEX IF NOT EXISTS indx_sellers_sellerid ON Sellers (seller_id);")
 
         start_time = time.perf_counter() 
         for i in range(50):
