@@ -47,14 +47,41 @@ Indices here!
 ###########
 # Queries #
 ###########
+------------------------------------------------------------------------------------------------------------------------------------
+[2] indicates a variation in table names. The uninformed case uses the non-primary key tables ([2]), but the other two cases do not
+------------------------------------------------------------------------------------------------------------------------------------
 
-Queries here!
+CREATE VIEW OrderSize 
+AS SELECT i.order_id as oid, i.order_item_id  as size 
+FROM Orders[2] o, Order_items[2] i, Customers[2] c 
+WHERE o.order_id = i.order_id
+AND c.customer_id = o.customer_id 
+AND c.customer_postal_code = " + str(code[0]) + ";"
+
+– This query creates a view that takes data from joining three tables (Orders, Customers and Order_items). This expands on Q1 by creating a view displaying the order ids and the sizes of the orders that are all from customers that have the same randomly selected postal code. The view is outside of the for loop since the view is only created once
+
+
+SELECT oid 
+FROM OrderSize 
+WHERE size > (SELECT AVG(order_item_id) 
+FROM Order_items2);
+– This query is within the loop. It takes the oids (order ids) from the ordersize view that have an order size greater than the average out of the the order_item_id (number of items per order) from the order_times.
+
+Drop view OrderSize;
+– dropping the view is needed since the view is now unnecessary.
 
 ###########
 # Indices #
 ###########
 
-Indices here!
+CREATE INDEX IF NOT EXISTS indx_orders_order_id ON Orders (order_id, customer_id);
+– The index created here is on the order_id and the customer_id since these two are the attributes being used in the where statement and can increase efficiency compared to if there were no indices
+
+CREATE INDEX IF NOT EXISTS indx_order_items_order_id ON Order_items (order_id, order_item_id);
+– The index created here is on the order_id and the order_item_id since these two are the attributes being used in the where statement and can increase efficiency compared to if there were no indices
+
+CREATE INDEX IF NOT EXISTS indx_customer_customer_id ON Customers (customer_id, customer_postal_code);
+– The index created here is on the customer_id and the customer_postal_code since these two are the attributes being used in the where statement and can increase efficiency compared to if there were no indices
 
     ***************
     * Question #3 *
