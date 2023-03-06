@@ -73,7 +73,10 @@ def main():
         # Start timer
         start_time = time.perf_counter() 
         for i in range(50):
-            c.execute("SELECT i.order_id as oid, i.order_item_id FROM Orders2 o, Order_items2 i WHERE o.order_id = i.order_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items2);")
+            c.execute(UNINFORMED_POSTAL_QUERY)
+            codes = c.fetchall()
+            code = random.choice(codes)
+            c.execute("SELECT i.order_id as oid, i.order_item_id FROM Orders2 o, Order_items2 i, Customers2 c WHERE o.order_id = i.order_id AND c.customer_id = o.customer_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items2) AND c.customer_postal_code = " + str(code[0]) + ";")
         stop_time = time.perf_counter()
 
         no_index_time_avg = ((stop_time - start_time) / 50) * 1000
@@ -89,7 +92,10 @@ def main():
 
         start_time = time.perf_counter() 
         for i in range(50):
-            c.execute("SELECT i.order_id as oid, i.order_item_id FROM Orders o, Order_items i WHERE o.order_id = i.order_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items);")
+            c.execute(POSTAL_QUERY)
+            codes = c.fetchall()
+            code = random.choice(codes)
+            c.execute("SELECT i.order_id as oid, i.order_item_id FROM Orders o, Order_items i, Customers c WHERE o.order_id = i.order_id AND c.customer_id = o.customer_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items) AND c.customer_postal_code = " + str(code[0]) + ";")
         stop_time = time.perf_counter()
 
         self_index_time_avg = ((stop_time - start_time) / 50) * 1000
@@ -99,15 +105,19 @@ def main():
 
         # OUR INDEXING --------------------------------------
         conn, c = connect_to_db(database)
-        c.execute("drop index if exists indx_orders_orderid")
+        c.execute("drop index if exists indx_orders_order_id")
         c.execute("drop index if exists indx_order_items_order_id")
         c.execute(ORDERS_INDEXING)
         c.execute(ORDER_ITEMS_INDEXING)
+        c.execute(CUSTOMER_INDEXING)
 
         
         start_time = time.perf_counter() 
         for i in range(50):
-            c.execute("SELECT i.order_id as oid, i.order_item_id FROM Orders o, Order_items i WHERE o.order_id = i.order_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items);")
+            c.execute(POSTAL_QUERY)
+            codes = c.fetchall()
+            code = random.choice(codes)
+            c.execute("SELECT i.order_id as oid, i.order_item_id FROM Orders o, Order_items i, Customers c WHERE o.order_id = i.order_id AND c.customer_id = o.customer_id AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items) AND c.customer_postal_code = " + str(code[0]) + ";")
         stop_time = time.perf_counter()
         
         our_index_time_avg = ((stop_time - start_time) / 50) * 1000
@@ -127,6 +137,6 @@ def main():
     plt.xlabel("Databases")
     plt.ylabel("Time in ms")
     plt.legend(["Uninformed", "Self-Optimized", "User Optimized"])
-    plt.title("Query 3 (Runtime In Seconds)")
-    plt.savefig("Q3A3chart.png")
+    plt.title("Query 3 (ms)")
+    plt.savefig("Q3A3Chart.png")
 main()
