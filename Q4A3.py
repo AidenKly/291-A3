@@ -73,7 +73,7 @@ def create_graph(times):
     plt.bar(x_axies_labels, User_optimized_times, bottom=Uninformed + Self_optimized_times, color='g')
     plt.legend(["Uninformed", "Self-optimized", "User-optimized"])
     plt.title("Query 4 (Runtime in seconds)")
-    plt.savefig("test")
+    plt.savefig("Q4A3Chart.png")
     
 
 def main():
@@ -106,7 +106,7 @@ def main():
             pass
 
         for i in range(len(table_names)):
-            c.execute('INSERT INTO ' + table_names[i] + '2" SELECT * FROM ' + table_names[i] + '";')
+            c.execute('INSERT INTO ' + table_names[i] + '2" SELECT * FROM ' + table_names[i] + '" WHERE NOT EXISTS (SELECT * FROM ' + table_names[i] + '2");')
 
 
 
