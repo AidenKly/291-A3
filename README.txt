@@ -105,14 +105,32 @@ CREATE INDEX IF NOT EXISTS indx_customer_customer_id ON Customers (customer_id, 
 ###########
 # Queries #
 ###########
+------------------------------------------------------------------------------------------------------------------------------------
+[2] indicates a variation in table names. The uninformed case uses the non-primary key tables ([2]), but the other two cases do not
+------------------------------------------------------------------------------------------------------------------------------------
 
-Queries here!
+SELECT i.order_id as oid, i.order_item_id 
+FROM Orders[2] o, Order_items[2] i, Customers[2] c 
+WHERE o.order_id = i.order_id 
+AND c.customer_id = o.customer_id 
+AND i.order_item_id > (SELECT AVG(order_item_id) FROM Order_items2) AND c.customer_postal_code = " + str(code[0]) + ";"
+– This query joins three tables together (Orders, Orders_items, Customers) and checks for orders that have a larger than average size of order for a group of customers that all have the same randomly generated postal code.
+
 
 ###########
 # Indices #
 ###########
 
-Indices here!
+CREATE INDEX IF NOT EXISTS indx_orders_order_id ON Orders (order_id, customer_id);
+– The index created here is on the order_id and the customer_id since these two are the attributes being used in the where statement and can increase efficiency compared to if there were no indices
+
+
+CREATE INDEX IF NOT EXISTS indx_order_items_order_id ON Order_items (order_id, order_item_id);
+– The index created here is on the order_id and the customer_id since these two are the attributes being used in the where statement and can increase efficiency compared to if there were no indices
+
+CREATE INDEX IF NOT EXISTS indx_customer_customer_id ON Customers (customer_id, customer_postal_code);
+– The index created here is on the order_id and the customer_id since these two are the attributes being used in the where statement and can increase efficiency compared to if there were no indices
+
 
     ***************
     * Question #4 *
