@@ -68,15 +68,15 @@ def main():
         setup_uninformed_tables(c)
 
         # Start timer
-        start_time = time.perf_counter() 
-        c.execute("CREATE VIEW OrderSize AS SELECT i.order_id as oid, i.order_item_id  as size FROM Orders2 o, Order_items2 i, Customers2 c WHERE o.order_id = i.order_id AND c.customer_id = o.customer_id;")
+        start_time = time.perf_counter()
+        c.execute(UNINFORMED_POSTAL_QUERY)
+        codes = c.fetchall()
+        code = random.choice(codes)
+        c.execute("CREATE VIEW OrderSize AS SELECT i.order_id as oid, i.order_item_id  as size FROM Orders2 o, Order_items2 i, Customers2 c WHERE o.order_id = i.order_id AND c.customer_id = o.customer_id AND c.customer_postal_code = " + str(code[0]) + ";")
         for i in range(50):
             try:
-                c.execute(UNINFORMED_POSTAL_QUERY)
-                codes = c.fetchall()
-                code = random.choice(codes)
                 c.execute(
-                    "SELECT oid FROM OrderSize WHERE size > (SELECT AVG(order_item_id) FROM Order_items2) AND c.customer_postal_code = " + str(code[0]) + ";"
+                    "SELECT oid FROM OrderSize WHERE size > (SELECT AVG(order_item_id) FROM Order_items2);"
                 )
 
             except sqlite3.Error as e:
@@ -95,14 +95,14 @@ def main():
         c.execute("PRAGMA foreign_keys = ON")
 
         start_time = time.perf_counter() 
-        c.execute("CREATE VIEW OrderSize AS SELECT i.order_id as oid, i.order_item_id  as size FROM Orders o, Order_items i, Customers c WHERE o.order_id = i.order_id AND c.customer_id = o.customer_id;")
+        c.execute(POSTAL_QUERY)
+        codes = c.fetchall()
+        code = random.choice(codes)
+        c.execute("CREATE VIEW OrderSize AS SELECT i.order_id as oid, i.order_item_id  as size FROM Orders o, Order_items i, Customers c WHERE o.order_id = i.order_id AND c.customer_id = o.customer_id AND c.customer_postal_code = " + str(code[0]) + ";")
         for i in range(50):
             try:
-                c.execute(POSTAL_QUERY)
-                codes = c.fetchall()
-                code = random.choice(codes)
                 c.execute(
-                    "SELECT oid FROM OrderSize WHERE size > (SELECT AVG(order_item_id) FROM Order_items2) AND c.customer_postal_code = " + str(code[0]) + ";"
+                    "SELECT oid FROM OrderSize WHERE size > (SELECT AVG(order_item_id) FROM Order_items2);"
                 )
 
             except sqlite3.Error as e:
@@ -124,15 +124,15 @@ def main():
         c.execute(ORDER_ITEMS_INDEXING)
         c.execute(CUSTOMER_INDEXING)
         
-        start_time = time.perf_counter() 
-        c.execute("CREATE VIEW OrderSize AS SELECT i.order_id as oid, i.order_item_id  as size FROM Orders o, Order_items i, Customers c WHERE o.order_id = i.order_id AND c.customer_id = o.customer_id;")
+        start_time = time.perf_counter()
+        c.execute(POSTAL_QUERY)
+        codes = c.fetchall()
+        code = random.choice(codes)
+        c.execute("CREATE VIEW OrderSize AS SELECT i.order_id as oid, i.order_item_id  as size FROM Orders o, Order_items i, Customers c WHERE o.order_id = i.order_id AND c.customer_id = o.customer_id AND c.customer_postal_code = " + str(code[0]) + ";")
         for i in range(50):
             try:
-                c.execute(POSTAL_QUERY)
-                codes = c.fetchall()
-                code = random.choice(codes)
                 c.execute(
-                    "SELECT oid FROM OrderSize WHERE size > (SELECT AVG(order_item_id) FROM Order_items2) AND c.customer_postal_code = " + str(code[0]) + ";"
+                    "SELECT oid FROM OrderSize WHERE size > (SELECT AVG(order_item_id) FROM Order_items2);"
                 )
 
             except sqlite3.Error as e:
