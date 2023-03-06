@@ -102,7 +102,7 @@ def main():
         for i in range(50):
             try:
                 c.execute(
-                    "SELECT oid FROM OrderSize WHERE size > (SELECT AVG(order_item_id) FROM Order_items2);"
+                    "SELECT oid FROM OrderSize WHERE size > (SELECT AVG(order_item_id) FROM Order_items);"
                 )
 
             except sqlite3.Error as e:
@@ -132,7 +132,7 @@ def main():
         for i in range(50):
             try:
                 c.execute(
-                    "SELECT oid FROM OrderSize WHERE size > (SELECT AVG(order_item_id) FROM Order_items2);"
+                    "SELECT oid FROM OrderSize WHERE size > (SELECT AVG(order_item_id) FROM Order_items);"
                 )
 
             except sqlite3.Error as e:
@@ -158,5 +158,5 @@ def main():
     plt.ylabel("Time in ms")
     plt.legend(["Uninformed", "Self-Optimized", "User Optimized"])
     plt.title("Query 2 (Runtime In Seconds)")
-    plt.savefig("Q2A3chart.png")
+    plt.savefig("Q2A3Chart.png")
 main()
