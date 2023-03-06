@@ -19,11 +19,11 @@ import time, sqlite3, random, matplotlib.pyplot as plt, numpy as np
 #       2. DisconnectA3Large.db
 # 4. Plot query performance results.
 
-SMALL_DB_NAME = "s.db"
-MED_DB_NAME = "m.db"
-LARGE_DB_NAME = "l.db"
+SMALL_DB_NAME = "A3Small.db"
+MED_DB_NAME = "A3Medium.db"
+LARGE_DB_NAME = "A3Large.db"
 
-ORDERS_INDEXING = "CREATE INDEX IF NOT EXISTS indx_orders_orderid ON Orders (order_id, customer_id);"
+ORDERS_INDEXING = "CREATE INDEX IF NOT EXISTS indx_orders_order_id ON Orders (order_id, customer_id);"
 ORDER_ITEMS_INDEXING = "CREATE INDEX IF NOT EXISTS indx_order_items_order_id ON Order_items (order_id, order_item_id);"
 CUSTOMER_INDEXING = "CREATE INDEX IF NOT EXISTS indx_customer_customerid ON Customers (customer_id, customer_postal_code);"
 UNINFORMED_POSTAL_QUERY = "SELECT customer_postal_code FROM Customers2;"
@@ -62,6 +62,8 @@ def main():
 
         c.execute("DROP TABLE IF EXISTS indx_order_items_order_id;")
         c.execute("DROP TABLE IF EXISTS indx_orders_order_id;")
+        c.execute("DROP TABLE IF EXISTS indx_customers_customer_id;")
+        c.execute("DROP TABLE IF EXISTS indx_sellers_seller_id;")
         
         setup_uninformed_tables(c)
 

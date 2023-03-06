@@ -25,9 +25,9 @@ import time, sqlite3, random, matplotlib.pyplot as plt, numpy as np
 #       2. DisconnectA3Large.db
 # 4. Plot query performance results.
 
-SMALL_DB_NAME = "s.db"
-MED_DB_NAME = "m.db"
-LARGE_DB_NAME = "l.db"
+SMALL_DB_NAME = "A3Small.db"
+MED_DB_NAME = "A3Medium.db"
+LARGE_DB_NAME = "A3Large.db"
 
 
 CUSTOMER_SELECT_QUERY = "SELECT Cu.customer_id FROM Customers Cu, Orders Ord WHERE Cu.customer_id = Ord.customer_id GROUP BY Cu.customer_id HAVING COUNT(order_id) > 1;"
@@ -88,10 +88,10 @@ def main():
         # NO INDEX -------------------------------------------
         # Turns Off Indexing
         conn, c = connect_to_db(database)
-        c.execute("DROP TABLE IF EXISTS indx_orders_orderid;")
-        c.execute("DROP TABLE IF EXISTS indx_order_items_orderid;")
-        c.execute("DROP TABLE IF EXISTS indx_customer_customerid;")
-        c.execute("DROP TABLE IF EXISTS indx_sellers_sellerid;")
+        c.execute("DROP TABLE IF EXISTS indx_orders_order_id;")
+        c.execute("DROP TABLE IF EXISTS indx_order_items_order_id;")
+        c.execute("DROP TABLE IF EXISTS indx_customer_customer_id;")
+        c.execute("DROP TABLE IF EXISTS indx_sellers_seller_id;")
 
         c.execute("PRAGMA automatic_index = OFF")
         c.execute("PRAGMA foreign_keys = OFF")
@@ -181,10 +181,10 @@ def main():
 
         # OUR INDEXING --------------------------------------
         conn, c = connect_to_db(database)
-        c.execute("CREATE INDEX IF NOT EXISTS indx_orders_orderid ON Orders (order_id, customer_id);")
-        c.execute("CREATE INDEX IF NOT EXISTS indx_order_items_orderid ON Order_items (order_id, seller_id);")
-        c.execute("CREATE INDEX IF NOT EXISTS indx_customer_customerid ON Customers (customer_id, customer_postal_code);")
-        c.execute("CREATE INDEX IF NOT EXISTS indx_sellers_sellerid ON Sellers (seller_id);")
+        c.execute("CREATE INDEX IF NOT EXISTS indx_orders_order_id ON Orders (order_id, customer_id);")
+        c.execute("CREATE INDEX IF NOT EXISTS indx_order_items_order_id ON Order_items (order_id, seller_id);")
+        c.execute("CREATE INDEX IF NOT EXISTS indx_customer_customer_id ON Customers (customer_id, customer_postal_code);")
+        c.execute("CREATE INDEX IF NOT EXISTS indx_sellers_seller_id ON Sellers (seller_id);")
 
         start_time = time.perf_counter() 
         for i in range(50):
