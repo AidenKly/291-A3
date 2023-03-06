@@ -32,13 +32,28 @@ were then run on these new, primary-key-less tables to ensure experimental consi
 # Queries #
 ###########
 
-Queries here!
+UNINFORMED 
+c.execute("SELECT customer_postal_code FROM Customers2;")
+codes = c.fetchall()
+code = random.choice(codes)
+c.execute("SELECT COUNT(O.order_id) FROM Orders2 O, Customers2 C, Order_items2 OI WHERE O.order_id = OI.order_id AND C.customer_id = O.customer_id AND OI.order_item_id > 1 AND C.customer_postal_code = " + str(code[0]) + ";")
 
+SELF AND USER
+c.execute("SELECT customer_postal_code FROM Customers;")
+codes = c.fetchall()
+code = random.choice(codes)
+c.execute("SELECT COUNT(O.order_id) FROM Orders O, Customers C, Order_items OI WHERE O.order_id = OI.order_id AND C.customer_id = O.customer_id AND OI.order_item_id > 1 AND C.customer_postal_code = " + str(code[0]) + ";")
+
+These queries select all postal codes for the customers table, and then uses that output to randomly select 1 postal code. With that 1 postal code, we select the number of order ids where the number of items puchased is > 1 and the postal code matches
 ###########
 # Indices #
 ###########
 
-Indices here!
+CREATE INDEX IF NOT EXISTS indx_orders_order_id ON Orders (order_id, customer_id);
+CREATE INDEX IF NOT EXISTS indx_order_items_order_id ON Order_items (order_id, order_item_id);
+CREATE INDEX IF NOT EXISTS indx_customer_customer_id ON Customers (customer_id, customer_postal_code);
+
+The general idea behind all of these indexes is the indexes are based on the attributes present in the SELECT and WHERE clauses of my queries. They are also ordered based on how the attributes appear on the table
 
     ***************
     * Question #2 *
