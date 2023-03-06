@@ -157,6 +157,6 @@ def main():
     plt.xlabel("Databases")
     plt.ylabel("Time in ms")
     plt.legend(["Uninformed", "Self-Optimized", "User Optimized"])
-    plt.title("Query 2 (Runtime In Seconds)")
+    plt.title("Query 2 (Runtime In ms)")
     plt.savefig("Q2A3Chart.png")
 main()
