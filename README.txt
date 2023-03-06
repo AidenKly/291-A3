@@ -6,14 +6,25 @@ Members: William Creaser (wcreaser), Aiden Klymchuk (aklymchu), Kaye Maranan (ka
 
 - We did not collaborate with anyone outside of our own group in this assignment
 
-User Optimized Scenarios
-#1
+Resources:
+    https://www.geeksforgeeks.org/working-csv-files-python/
+    https://matplotlib.org/stable/gallery/lines_bars_and_markers/bar_stacked.html
+    https://www.geeksforgeeks.org/create-a-stacked-bar-plot-in-matplotlib/
+    https://www.sqlitetutorial.net/sqlite-index/
 
-#2
 
-#3
 
-#4
+######################
+# Info for questions #
+######################
+
+    Question #1
+
+    Question #2
+
+    Question #3
+
+    Question #4
 
 ###########
 # Queries #
@@ -71,10 +82,3 @@ CREATE INDEX IF NOT EXISTS indx_customer_customerid ON Customers (customer_id);
 CREATE INDEX IF NOT EXISTS indx_sellers_sellerid ON Sellers (seller_id);
 
     - Sellers.seller_id is indexed as it is used in the third SQL query in Question 4. This would increase efficiency for that query over not having any indices on Sellers.
-
-
-Resources:
-    https://www.geeksforgeeks.org/working-csv-files-python/
-    https://matplotlib.org/stable/gallery/lines_bars_and_markers/bar_stacked.html
-    https://www.geeksforgeeks.org/create-a-stacked-bar-plot-in-matplotlib/
-    https://www.sqlitetutorial.net/sqlite-index/
