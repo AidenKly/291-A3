@@ -58,14 +58,11 @@ def create_graph(times):
     Uninformed_times = [times[0], times[3], times[6]]
     Self_optimized_times = [times[1], times[4], times[7]]
     User_optimized_times = [times[2], times[5], times[8]]
-
     x_axies_labels = ["SmallDB", "MediumDB", "LargeDB"]
-    Uninformed = np.array(Uninformed_times)
-    Self_optimized = np.array(Self_optimized_times)
-    User_optimized = np.array(User_optimized_times)
-    plt.bar(x_axies_labels, Uninformed, color='b')
-    plt.bar(x_axies_labels, Self_optimized_times, bottom=Uninformed , color='r')
-    plt.bar(x_axies_labels, User_optimized_times, bottom=Uninformed + Self_optimized_times, color='g')
+    
+    plt.bar(x_axies_labels, Uninformed_times, color='b')
+    plt.bar(x_axies_labels, Self_optimized_times, bottom=Uninformed_times , color='r')
+    plt.bar(x_axies_labels, User_optimized_times, bottom=Uninformed_times + Self_optimized_times, color='g')
     plt.legend(["Uninformed", "Self-optimized", "User-optimized"])
     plt.title("Query 4 (Runtime in seconds)")
     plt.savefig("Q4A3Chart.png")
