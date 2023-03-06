@@ -17,6 +17,12 @@ Resources:
 ######################
 # Info for questions #
 ######################
+---------------------------------------------------------------------------------------------------------------------------------
+For each Uninformed scenario, in order to remove primary keys, the tables were recreated as their respective names 
+with the number 2 (eg. Customers2 vs Customers) WITHOUT declaring a primary key. The uninformed scenario queries 
+were then run on these new, primary-key-less tables to ensure experiemntal consistency with the uninformed scenario description.
+---------------------------------------------------------------------------------------------------------------------------------
+
 
     ***************
     * Question #1 *
@@ -73,7 +79,7 @@ Indices here!
 ###########
 # Queries #
 ###########
-
+--------------------------------------------------------------------------------------------------------
 Everything enclosed in [] indicates a potential difference depending on the scenario (eg. Customers[2]).
 --------------------------------------------------------------------------------------------------------
 
