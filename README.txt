@@ -19,8 +19,11 @@ User Optimized Scenarios
 # Queries #
 ###########
 
+Everything enclosed in [] indicates a potential difference depending on the scenario (eg. Customers[2]).
+--------------------------------------------------------------------------------------------------------
+
 SELECT Cu.customer_id 
-FROM Customers Cu, Orders Ord 
+FROM Customers[2] Cu, Orders[2] Ord 
 WHERE Cu.customer_id = Ord.customer_id 
 GROUP BY Cu.customer_id 
 HAVING COUNT(order_id) > 1;
@@ -28,7 +31,7 @@ HAVING COUNT(order_id) > 1;
     - This query selects all of the customer_ids belonging to customers who have more than one order (differentiated by order_id).
 
 SELECT Ord.order_id
-FROM Customers2 Cu, Orders2 Ord 
+FROM Customers[2] Cu, Orders[2] Ord 
 WHERE Cu.customer_id = Ord.customer_id AND
 Cu.customer_id = "{random_customer_id}"
     
@@ -36,7 +39,7 @@ Cu.customer_id = "{random_customer_id}"
     uses python's f-string formatting to embed a randomly chosen customer_id into the query.
 
 SELECT COUNT(DISTINCT seller_postal_code)
-FROM Customers2 Cu, Orders2 Ord, Sellers2 S, Order_items2 Oi
+FROM Customers[2] Cu, Orders[2] Ord, Sellers[2] S, Order_items[2] Oi
 WHERE Cu.customer_id = Ord.customer_id AND
 Ord.order_id = Oi.order_id AND
 S.seller_id = Oi.seller_id AND
@@ -50,11 +53,25 @@ Cu.order_id = "{order_id_from_random_customer}"
 # Indices #
 ###########
 
-
 CREATE INDEX IF NOT EXISTS indx_orders_orderid ON Orders (order_id, customer_id);
+
+    - Orders.order_id and Orders.customer_id are both indexed as they are used in every SQL query in Question 4. This would increase efficiency overall compared to not having any indices on Orders.
+
+
 CREATE INDEX IF NOT EXISTS indx_order_items_orderid ON Order_items (order_id, seller_id);
-CREATE INDEX IF NOT EXISTS indx_customer_customerid ON Customers (customer_id, customer_postal_code);
+
+    - Order_items.order_id and Order_items.seller_id are both indexed as they are used in the third SQL query in Question 4. This would increase efficiency for that query over not having any indices on Order_items.
+
+
+CREATE INDEX IF NOT EXISTS indx_customer_customerid ON Customers (customer_id);
+
+    - Customers.customer_id is indexed as it is used in every SQL query in Question 4. This would increase efficiency overall compared to not having any indices on Customers.
+
+
 CREATE INDEX IF NOT EXISTS indx_sellers_sellerid ON Sellers (seller_id);
+
+    - Sellers.seller_id is indexed as it is used in the third SQL query in Question 4. This would increase efficiency for that query over not having any indices on Sellers.
+
 
 Resources:
     https://www.geeksforgeeks.org/working-csv-files-python/

@@ -1,8 +1,3 @@
-# Q4: Choose a random customer with more than one order and for that customer's orders, find in how
-# many (unique) postal codes the sellers provided those orders.
-
-
-
 import time, sqlite3, random, matplotlib.pyplot as plt, numpy as np
 
 # 1. Connect to A3Small.db
@@ -30,7 +25,7 @@ MED_DB_NAME = "A3Medium.db"
 LARGE_DB_NAME = "A3Large.db"
 
 
-CUSTOMER_SELECT_QUERY = "SELECT Cu.customer_id FROM Customers Cu, Orders Ord WHERE Cu.customer_id = Ord.customer_id GROUP BY Cu.customer_id HAVING COUNT(order_id) > 1;"
+# "SELECT Cu.customer_id FROM Customers Cu, Orders Ord WHERE Cu.customer_id = Ord.customer_id GROUP BY Cu.customer_id HAVING COUNT(order_id) > 1;"
 
 # select a random result from previous
 
@@ -114,7 +109,7 @@ def main():
         # Start timer
         start_time = time.perf_counter() 
         for i in range(50):
-            c.execute(CUSTOMER_SELECT_QUERY)
+            c.execute("SELECT Cu.customer_id FROM Customers2 Cu, Orders2 Ord WHERE Cu.customer_id = Ord.customer_id GROUP BY Cu.customer_id HAVING COUNT(order_id) > 1;")
             customers = c.fetchall()
             try:
                 random_customer_id = random.choice(customers)
@@ -149,12 +144,12 @@ def main():
 
         start_time = time.perf_counter() 
         for i in range(50):
-            c.execute(CUSTOMER_SELECT_QUERY)
+            c.execute("SELECT Cu.customer_id FROM Customers Cu, Orders Ord WHERE Cu.customer_id = Ord.customer_id GROUP BY Cu.customer_id HAVING COUNT(order_id) > 1;")
             customers = c.fetchall()
             try:
                 random_customer_id = random.choice(customers)
             except:
-                random_customer_id = "NONE"
+                random_customer_id = ""
             c.execute(f'SELECT Ord.order_id\
                         FROM Customers Cu, Orders Ord \
                         WHERE Cu.customer_id = Ord.customer_id AND\
@@ -183,12 +178,12 @@ def main():
         conn, c = connect_to_db(database)
         c.execute("CREATE INDEX IF NOT EXISTS indx_orders_order_id ON Orders (order_id, customer_id);")
         c.execute("CREATE INDEX IF NOT EXISTS indx_order_items_order_id ON Order_items (order_id, seller_id);")
-        c.execute("CREATE INDEX IF NOT EXISTS indx_customer_customer_id ON Customers (customer_id, customer_postal_code);")
+        c.execute("CREATE INDEX IF NOT EXISTS indx_customer_customer_id ON Customers (customer_id);")
         c.execute("CREATE INDEX IF NOT EXISTS indx_sellers_seller_id ON Sellers (seller_id);")
 
         start_time = time.perf_counter() 
         for i in range(50):
-            c.execute(CUSTOMER_SELECT_QUERY)
+            c.execute("SELECT Cu.customer_id FROM Customers Cu, Orders Ord WHERE Cu.customer_id = Ord.customer_id GROUP BY Cu.customer_id HAVING COUNT(order_id) > 1;")
             customers = c.fetchall()
             try:
                 random_customer_id = random.choice(customers)
