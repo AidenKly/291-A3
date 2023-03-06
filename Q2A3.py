@@ -25,7 +25,7 @@ LARGE_DB_NAME = "A3Large.db"
 
 ORDERS_INDEXING = "CREATE INDEX IF NOT EXISTS indx_orders_order_id ON Orders (order_id, customer_id);"
 ORDER_ITEMS_INDEXING = "CREATE INDEX IF NOT EXISTS indx_order_items_order_id ON Order_items (order_id, order_item_id);"
-CUSTOMER_INDEXING = "CREATE INDEX IF NOT EXISTS indx_customer_customerid ON Customers (customer_id, customer_postal_code);"
+CUSTOMER_INDEXING = "CREATE INDEX IF NOT EXISTS indx_customer_customer_id ON Customers (customer_id, customer_postal_code);"
 UNINFORMED_POSTAL_QUERY = "SELECT customer_postal_code FROM Customers2;"
 POSTAL_QUERY = "SELECT customer_postal_code FROM Customers;"
 DATABASE_NAMES = [SMALL_DB_NAME, MED_DB_NAME, LARGE_DB_NAME]
