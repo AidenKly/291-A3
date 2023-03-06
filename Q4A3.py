@@ -59,7 +59,7 @@ def create_graph(times):
     Self_optimized_times = [times[1], times[4], times[7]]
     User_optimized_times = [times[2], times[5], times[8]]
     x_axies_labels = ["SmallDB", "MediumDB", "LargeDB"]
-    
+
     plt.bar(x_axies_labels, Uninformed_times, color='b')
     plt.bar(x_axies_labels, Self_optimized_times, bottom=Uninformed_times , color='r')
     plt.bar(x_axies_labels, User_optimized_times, bottom=Uninformed_times + Self_optimized_times, color='g')
@@ -124,9 +124,6 @@ def main():
                             Ord.order_id = Oi.order_id AND \
                             S.seller_id = Oi.seller_id AND \
                             Cu.order_id = "{order_id_from_random_customer}"')
-            #---------------
-            # ADD MORE HERE IF NEEDED
-            #---------------
         stop_time = time.perf_counter()
 
         no_index_time_avg = (stop_time - start_time) / 50
@@ -159,9 +156,6 @@ def main():
                             Ord.order_id = Oi.order_id AND \
                             S.seller_id = Oi.seller_id AND \
                             Cu.order_id = "{order_id_from_random_customer}"')
-            #---------------
-            # ADD MORE HERE IF NEEDED
-            #---------------
         stop_time = time.perf_counter()
 
         self_index_time_avg = (stop_time - start_time) / 50
@@ -198,9 +192,6 @@ def main():
                             Ord.order_id = Oi.order_id AND \
                             S.seller_id = Oi.seller_id AND \
                             Cu.order_id = "{order_id_from_random_customer}"')
-            #---------------
-            # ADD MORE HERE IF NEEDED
-            #---------------
         stop_time = time.perf_counter()
 
         our_index_time_avg = (stop_time - start_time) / 50
