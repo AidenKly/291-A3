@@ -63,10 +63,10 @@ def main():
         # NO INDEX -------------------------------------------
         # Turns Off Indexing
         conn, c = connect_to_db(database)
-        c.execute("DROP TABLE IF EXISTS indx_order_items_order_id;")
-        c.execute("DROP TABLE IF EXISTS indx_orders_order_id;")
-        c.execute("DROP TABLE IF EXISTS indx_customer_customer_id;")
-        c.execute("DROP TABLE IF EXISTS indx_sellers_seller_id;")
+        c.execute("DROP INDEX IF EXISTS indx_order_items_order_id;")
+        c.execute("DROP INDEX IF EXISTS indx_orders_order_id;")
+        c.execute("DROP INDEX IF EXISTS indx_customer_customer_id;")
+        c.execute("DROP INDEX IF EXISTS indx_sellers_seller_id;")
         
         setup_uninformed_tables(c)
 
