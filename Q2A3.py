@@ -62,7 +62,7 @@ def main():
 
         c.execute("DROP INDEX IF EXISTS indx_order_items_order_id;")
         c.execute("DROP INDEX IF EXISTS indx_orders_order_id;")
-        c.execute("DROP INDEX IF EXISTS indx_customers_customer_id;")
+        c.execute("DROP INDEX IF EXISTS indx_customer_customer_id;")
         c.execute("DROP INDEX IF EXISTS indx_sellers_seller_id;")
         
         setup_uninformed_tables(c)
