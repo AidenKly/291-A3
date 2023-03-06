@@ -111,7 +111,7 @@ def main():
             try:
                 random_customer_id = random.choice(customers)
             except:
-                random_customer_id = "NONE"
+                random_customer_id = ""
             c.execute(f'SELECT Ord.order_id\
                         FROM Customers2 Cu, Orders2 Ord \
                         WHERE Cu.customer_id = Ord.customer_id AND\
@@ -179,7 +179,7 @@ def main():
             try:
                 random_customer_id = random.choice(customers)
             except:
-                random_customer_id = "NONE"
+                random_customer_id = ""
             c.execute(f'SELECT Ord.order_id\
                         FROM Customers Cu, Orders Ord \
                         WHERE Cu.customer_id = Ord.customer_id AND\
