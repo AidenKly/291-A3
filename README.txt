@@ -18,13 +18,57 @@ Resources:
 # Info for questions #
 ######################
 
-    Question #1
+    ***************
+    * Question #1 *
+    ***************
 
-    Question #2
+###########
+# Queries #
+###########
 
-    Question #3
+Queries here!
 
-    Question #4
+###########
+# Indices #
+###########
+
+Indices here!
+
+    ***************
+    * Question #2 *
+    ***************
+
+###########
+# Queries #
+###########
+
+Queries here!
+
+###########
+# Indices #
+###########
+
+Indices here!
+
+    ***************
+    * Question #3 *
+    ***************
+    
+###########
+# Queries #
+###########
+
+Queries here!
+
+###########
+# Indices #
+###########
+
+Indices here!
+
+    ***************
+    * Question #4 *
+    ***************
 
 ###########
 # Queries #
